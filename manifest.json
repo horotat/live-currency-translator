@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Live Currency Translator",
+  "version": "1.0",
+  "description": "Translates all currencies on a webpage to your preferred currency using real-time rates.",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Translate Currencies"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

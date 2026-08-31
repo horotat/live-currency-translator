@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { 
+      width: 320px; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      padding: 16px; 
+      color: #1f2937;
+      margin: 0;
+      background-color: #f9fafb;
+    }
+    h2 { 
+      margin-top: 0; 
+      font-size: 18px; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px;
+      color: #111827;
+    }
+    p {
+      font-size: 13px; 
+      margin-bottom: 16px;
+      color: #4b5563;
+      line-height: 1.4;
+    }
+    select { 
+      width: 100%; 
+      padding: 10px; 
+      margin-bottom: 16px; 
+      border-radius: 8px; 
+      border: 1px solid #d1d5db; 
+      font-size: 14px; 
+      background-color: white;
+      outline: none;
+    }
+    select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    button { 
+      width: 100%; 
+      padding: 12px; 
+      background-color: #3b82f6; 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      font-weight: 600; 
+      transition: background-color 0.2s ease; 
+    }
+    button:hover { 
+      background-color: #2563eb; 
+    }
+    
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      box-sizing: border-box;
+      background-color: white;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    .currency-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 160px;
+      overflow-y: auto;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 4px;
+      z-index: 10;
+      display: none;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .currency-list.show {
+      display: block;
+    }
+    .currency-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .currency-item:hover, .currency-item.selected {
+      background-color: #eff6ff;
+      color: #1d4ed8;
+    }
+    
+    .footer { 
+      margin-top: 16px; 
+      font-size: 11px; 
+      text-align: center; 
+      color: #9ca3af; 
+    }
+  </style>
+</head>
+<body>
+  <h2>🌍 Currency Translator</h2>
+  <p>Select your preferred currency below to automatically convert all prices found on the current page.</p>
+  
+  <div class="search-wrapper">
+    <input type="text" id="currencySearch" placeholder="Loading currencies..." autocomplete="off" disabled>
+    <div id="dropdownList" class="currency-list"></div>
+  </div>
+  
+  <button id="translateBtn">Translate Page</button>
+  <div class="footer">Source: ExchangeRate-API</div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
