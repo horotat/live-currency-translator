@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: node --test
+      - run: npm run lint
+      - run: npm run icons
+      - name: Confirm icons are present and non-empty
+        run: |
+          for s in 16 32 48 128; do
+            test -s "icons/icon-$s.png" || { echo "missing icons/icon-$s.png"; exit 1; }
+          done
