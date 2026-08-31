@@ -1,5 +1,10 @@
 'use strict';
 
+// Wrapped in an IIFE: this file is loaded via `importScripts()` in the service
+// worker (shared global scope) AND co-injected into pages alongside content.js.
+// Nothing must leak to the shared scope except the `globalThis` assignment below.
+(function () {
+
 /** Escape a string for literal use inside a RegExp. */
 function escapeRegExp(str) {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -177,3 +182,5 @@ const api = {
 
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 if (typeof globalThis !== 'undefined') globalThis.CurrencyLib = api;
+
+})();

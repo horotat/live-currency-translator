@@ -1,5 +1,10 @@
 'use strict';
 
+// Wrapped in an IIFE: loaded via `importScripts()` in the service worker, which
+// shares one global scope across all imported files. Only the `globalThis`
+// assignment at the bottom may escape.
+(function () {
+
 const PRIMARY_URL = 'https://open.er-api.com/v6/latest/USD';
 const FALLBACK_URL = 'https://api.frankfurter.dev/v1/latest?base=USD';
 const CACHE_KEY = 'ratesCache';
@@ -103,3 +108,5 @@ const api = {
 
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 if (typeof globalThis !== 'undefined') globalThis.RatesLib = api;
+
+})();
