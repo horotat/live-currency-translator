@@ -3,6 +3,9 @@
 A Chrome extension (Manifest V3) that converts the prices shown on any web page
 into your preferred currency, using live exchange rates.
 
+**Website & currency calculator:** https://horotat.github.io/live-currency-translator/
+· **Report an issue:** https://github.com/horotat/live-currency-translator/issues/new/choose
+
 ## How it works
 
 - Click the toolbar icon and pick a target currency.
@@ -50,6 +53,12 @@ is dependency-free vanilla JS with no build step. The only dev dependency
 - `scripts/check-manifest.mjs` — fails the build if the manifest ever declares a
   permission outside `{activeTab, scripting, storage}`, adds `host_permissions`,
   a static `content_scripts` block, or a custom CSP.
+
+## Contributing
+
+Bug reports (especially "site X doesn't convert"), fixes, and ideas are welcome
+— see [CONTRIBUTING.md](CONTRIBUTING.md) for what makes a report actionable and
+how the code is structured.
 
 ## Credits
 

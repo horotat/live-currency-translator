@@ -1,0 +1,61 @@
+name: "Prices on a site don't convert"
+description: A specific page where amounts aren't being converted (or convert wrongly)
+title: "[site] "
+labels: ["site-support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most "not converting" reports come down to a site using an unusual price
+        layout. The details below let it be reproduced without guesswork.
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      description: The exact page (a product page, not just the homepage).
+      placeholder: https://www.example.com/product/12345
+    validations:
+      required: true
+  - type: input
+    id: target
+    attributes:
+      label: Target currency you picked
+      placeholder: SEK
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: What happened
+      options:
+        - No prices converted at all
+        - Some converted, some didn't
+        - Converted to the wrong amount
+        - Converted but formatting looks broken
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: Which price(s)
+      description: |
+        Quote the price text as shown on the page (e.g. `€ 149​99`, `1.234,56 kr`).
+        A screenshot helps a lot — paste it here.
+    validations:
+      required: true
+  - type: input
+    id: chrome
+    attributes:
+      label: Chrome version
+      description: chrome://version → first line
+      placeholder: "128.0.6613.120"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Quick checks
+      options:
+        - label: "I clicked the toolbar icon and pressed \"Translate this page\" on this exact page"
+          required: true
+        - label: "The popup did not show an error"
+          required: true
+        - label: "`chrome://extensions` → this extension → \"Errors\" is empty"

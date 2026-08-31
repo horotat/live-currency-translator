@@ -20,8 +20,7 @@ jobs:
       - run: npm ci
       - run: node --test
       - run: npm run lint
-      - run: npm run icons
-      - name: Confirm icons are present and non-empty
+      - name: Confirm committed icons are present and non-empty
         run: |
           for s in 16 32 48 128; do
             test -s "icons/icon-$s.png" || { echo "missing icons/icon-$s.png"; exit 1; }

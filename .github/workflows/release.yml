@@ -23,9 +23,6 @@ jobs:
       - name: Sync manifest version from tag
         run: node scripts/sync-version.mjs "${GITHUB_REF_NAME}"
 
-      - name: Regenerate icons
-        run: npm run icons
-
       - name: Validate manifest and sources
         run: npm run lint
 

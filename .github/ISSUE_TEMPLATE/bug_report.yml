@@ -1,0 +1,43 @@
+name: "Bug report"
+description: Something else is broken (popup, revert, service worker, install)
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Errors
+      description: |
+        `chrome://extensions` → this extension → "Errors" and the service-worker
+        console (click "service worker"). Paste anything red here.
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: chrome
+    attributes:
+      label: Chrome version + OS
+      placeholder: "128.0.6613.120 / macOS 15"
+    validations:
+      required: true

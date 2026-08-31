@@ -13,6 +13,7 @@
     "test": "node --test",
     "lint": "node scripts/check-manifest.mjs && node --check src/background.js && node --check src/content.js && node --check src/popup.js && node --check src/lib/currency.js && node --check src/lib/rates.js",
     "icons": "node scripts/make-icons.mjs",
+    "store-assets": "node scripts/make-store-assets.mjs",
     "build": "node scripts/sync-version.mjs && node scripts/make-icons.mjs"
   },
   "devDependencies": {
