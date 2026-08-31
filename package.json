@@ -1,0 +1,19 @@
+{
+  "name": "live-currency-translator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Convert prices on any page to your preferred currency using live exchange rates.",
+  "license": "MIT",
+  "author": "horotat",
+  "repository": { "type": "git", "url": "https://github.com/horotat/live-currency-translator.git" },
+  "scripts": {
+    "test": "node --test",
+    "lint": "web-ext lint --source-dir . --ignore-files \"test/**\" \"scripts/**\" \"docs/**\" \".github/**\" \"assets/**\" \"*.md\" \"package*.json\"",
+    "icons": "node scripts/make-icons.mjs",
+    "build": "node scripts/sync-version.mjs && node scripts/make-icons.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5",
+    "web-ext": "^8.3.0"
+  }
+}
