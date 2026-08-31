@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Live Currency Translator",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Convert prices on any page to your preferred currency using live exchange rates.",
   "permissions": ["activeTab", "scripting", "storage"],
   "action": {
