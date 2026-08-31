@@ -71,8 +71,8 @@ https://github.com/horotat/live-currency-translator
 
 | Field | Value |
 |---|---|
-| Official URL (optional) | `ali.mk` if you want it verified on the listing, otherwise `None` |
-| Homepage URL (optional) | `https://ali.mk/live-currency-translator/` once GitHub Pages is serving; until then `https://github.com/horotat/live-currency-translator` |
+| Official URL (optional) | `None` (unless you verify `alireza.mk` in the dev console) |
+| Homepage URL (optional) | `https://currency.alireza.mk/` (once the DNS record + cert are live; until then `https://github.com/horotat/live-currency-translator`) |
 | Support URL (optional) | `https://github.com/horotat/live-currency-translator/issues` |
 | Mature content | Off |
 

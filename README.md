@@ -3,7 +3,7 @@
 A Chrome extension (Manifest V3) that converts the prices shown on any web page
 into your preferred currency, using live exchange rates.
 
-**Website & currency calculator:** https://horotat.github.io/live-currency-translator/
+**Website & currency calculator:** https://currency.alireza.mk/
 · **Report an issue:** https://github.com/horotat/live-currency-translator/issues/new/choose
 
 ## How it works
