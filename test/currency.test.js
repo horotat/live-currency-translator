@@ -63,3 +63,20 @@ test('translateText: no-op when target rate missing', () => {
   const o = { rates: RATES, targetCurrency: 'ZZZ' };
   assert.equal(C.translateText('€10.00', o), '€10.00');
 });
+
+test('parseAmount: extracts first currency amount (prefix and suffix, EU format)', () => {
+  assert.deepEqual(C.parseAmount('149,99 €', {}), { code: 'EUR', amount: 149.99 });
+  assert.deepEqual(C.parseAmount('€149.99', {}), { code: 'EUR', amount: 149.99 });
+  assert.deepEqual(C.parseAmount('now only $1,299.00!', {}), { code: 'USD', amount: 1299 });
+  assert.equal(C.parseAmount('no price here', {}), null);
+  assert.equal(C.parseAmount('', {}), null);
+});
+
+test('formatParts: splits a formatted amount into symbol / whole / fraction', () => {
+  const p = C.formatParts(1610.2, 'SEK', 'en-US');
+  assert.equal(p.whole, '1,610');
+  assert.equal(p.fraction, '20');
+  assert.ok(p.symbol.length > 0);
+  assert.equal(C.formatParts(1000, 'JPY', 'en-US').fraction, ''); // no minor unit
+  assert.equal(C.formatParts(1, 'ZZZ', 'en-US'), null);
+});

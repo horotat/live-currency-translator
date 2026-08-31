@@ -149,6 +149,50 @@ const NUM = '(\\d{1,3}(?:[.,\\u00A0\\u202F ]\\d{3})+(?:[.,]\\d{1,2})?|\\d+(?:[.,
 const SYM = '(?:' + SYMBOLS.map(escapeRegExp).join('|') + '|[A-Z]{3})';
 const RE_PREFIX = new RegExp('(' + SYM + ')\\s?' + NUM, 'g');
 const RE_SUFFIX = new RegExp(NUM + '\\s?(' + SYM + ')', 'g');
+// Non-global copies for single-match extraction (global regexes are stateful).
+const RE_PREFIX_ONE = new RegExp('(' + SYM + ')\\s?' + NUM);
+const RE_SUFFIX_ONE = new RegExp(NUM + '\\s?(' + SYM + ')');
+
+/**
+ * Find the first currency amount in a string.
+ * @returns {{ code: string, amount: number } | null}
+ */
+function parseAmount(text, ctx) {
+  if (typeof text !== 'string' || !text) return null;
+  const c = { lang: (ctx && ctx.lang || '').toLowerCase(), host: (ctx && ctx.host || '').toLowerCase() };
+  const pick = (re, tokenFirst) => {
+    const m = re.exec(text);
+    if (!m) return null;
+    const token = tokenFirst ? m[1] : m[2];
+    const amountStr = tokenFirst ? m[2] : m[1];
+    const code = resolveCurrency(token, c);
+    const amount = normalizeAmount(amountStr);
+    if (!code || !Number.isFinite(amount)) return null;
+    return { code, amount };
+  };
+  return pick(RE_PREFIX_ONE, true) || pick(RE_SUFFIX_ONE, false);
+}
+
+/**
+ * Format an amount and break it into the pieces a split-price widget needs.
+ * @returns {{ symbol: string, whole: string, fraction: string, formatted: string } | null}
+ */
+function formatParts(amount, code, locale) {
+  if (!isValidCurrencyCode(code) || !Number.isFinite(amount)) return null;
+  try {
+    const parts = new Intl.NumberFormat(locale || 'en-US', { style: 'currency', currency: code })
+      .formatToParts(amount);
+    let symbol = '', whole = '', fraction = '';
+    for (const p of parts) {
+      if (p.type === 'currency') symbol += p.value;
+      else if (p.type === 'integer' || p.type === 'group') whole += p.value;
+      else if (p.type === 'fraction') fraction += p.value;
+    }
+    return { symbol, whole, fraction, formatted: parts.map((p) => p.value).join('') };
+  } catch (_) {
+    return null;
+  }
+}
 
 function translateText(text, opts) {
   if (typeof text !== 'string' || !text) return text;
@@ -177,7 +221,7 @@ function translateText(text, opts) {
 
 const api = {
   escapeRegExp, isValidCurrencyCode, normalizeAmount, resolveCurrency,
-  convert, formatMoney, translateText,
+  convert, formatMoney, translateText, parseAmount, formatParts,
 };
 
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
