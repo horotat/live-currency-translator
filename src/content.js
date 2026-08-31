@@ -63,7 +63,30 @@
     return true;
   }
 
+  // Guard against a number split across sibling nodes:
+  // `<span>2</span><span> 151 ₽</span>`. Converting the second node alone would
+  // drop the leading digits and produce a wrong amount, so skip it entirely.
+  function precededByDigits(node) {
+    for (let prev = node.previousSibling; prev; prev = prev.previousSibling) {
+      let text = '';
+      if (prev.nodeType === Node.TEXT_NODE) text = prev.nodeValue;
+      else if (prev.nodeType === Node.ELEMENT_NODE) text = prev.textContent;
+      else continue;
+      if (!/\S/.test(text)) continue; // whitespace-only — look further back
+      return /\d[\s ]*$/.test(text);
+    }
+    return false;
+  }
+
+  function isPriceFragment(node) {
+    const v = node.nodeValue;
+    return /^[\s ]*\d/.test(v) &&
+      /[$€£¥₩₹₽₺]|[A-Z]{3}/.test(v) &&
+      precededByDigits(node);
+  }
+
   function translateNode(node, opts) {
+    if (isPriceFragment(node)) return false;
     const next = CurrencyLib.translateText(node.nodeValue, opts);
     return next === node.nodeValue ? false : setNodeText(node, next);
   }

@@ -108,10 +108,10 @@ function resolveCurrency(token, ctx) {
   const host = (ctxObj.host || '').toLowerCase();
   const lang = (ctxObj.lang || '').toLowerCase();
 
-  if (/^[A-Za-z]{3}$/.test(token)) {
-    const up = token.toUpperCase();
-    return isValidCurrencyCode(up) ? up : null;
-  }
+  // An explicit 3-letter ISO code anywhere in the token wins, even when a symbol
+  // is attached to it: "CAD $", "USD $", "EUR €" -> the code.
+  const embedded = token.match(/[A-Za-z]{3}/);
+  if (embedded && isValidCurrencyCode(embedded[0])) return embedded[0].toUpperCase();
 
   const amb = AMBIGUOUS[token];
   if (amb) {
@@ -144,13 +144,20 @@ function formatMoney(amount, code, locale) {
   }
 }
 
+// Every character a locale might use as a thousands separator: '.', ',', the
+// Swiss apostrophe, ASCII space and every Unicode space (incl. NBSP, narrow
+// NBSP, thin space — common on Russian/European sites like "2 151 ₽").
+const GRP = "[.,'\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u202F\\u205F\\u3000]";
 // Bounded number pattern: grouped thousands OR a plain run, optional 1-2 decimals.
-const NUM = '(\\d{1,3}(?:[.,\\u00A0\\u202F ]\\d{3})+(?:[.,]\\d{1,2})?|\\d+(?:[.,]\\d{1,2})?)';
+const NUM = '(\\d{1,3}(?:' + GRP + '\\d{3})+(?:[.,]\\d{1,2})?|\\d+(?:[.,]\\d{1,2})?)';
 const SYM = '(?:' + SYMBOLS.map(escapeRegExp).join('|') + '|[A-Z]{3})';
-const RE_PREFIX = new RegExp('(' + SYM + ')\\s?' + NUM, 'g');
+// A prefix token may also be a *real* ISO code with a symbol stuck on: "CAD $".
+// Restricting to real codes keeps "THE $100" from being swallowed as one token.
+const PRE = '(?:(?:' + [...CURRENCY_CODES].join('|') + ')\\s?[$€£¥₩₹₽₺]|' + SYM + ')';
+const RE_PREFIX = new RegExp('(' + PRE + ')\\s?' + NUM, 'g');
 const RE_SUFFIX = new RegExp(NUM + '\\s?(' + SYM + ')', 'g');
 // Non-global copies for single-match extraction (global regexes are stateful).
-const RE_PREFIX_ONE = new RegExp('(' + SYM + ')\\s?' + NUM);
+const RE_PREFIX_ONE = new RegExp('(' + PRE + ')\\s?' + NUM);
 const RE_SUFFIX_ONE = new RegExp(NUM + '\\s?(' + SYM + ')');
 
 /**

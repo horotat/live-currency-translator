@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 const C = require('../src/lib/currency.js');
 
-const RATES = { USD: 1, EUR: 0.5, JPY: 100, GBP: 0.8, SEK: 10, NOK: 11, CNY: 7 };
+const RATES = { USD: 1, EUR: 0.5, JPY: 100, GBP: 0.8, SEK: 10, NOK: 11, CNY: 7, RUB: 100, CAD: 1.25 };
 
 test('isValidCurrencyCode', () => {
   assert.equal(C.isValidCurrencyCode('USD'), true);
@@ -64,10 +64,37 @@ test('translateText: no-op when target rate missing', () => {
   assert.equal(C.translateText('€10.00', o), '€10.00');
 });
 
+test('translateText: space-grouped thousands are matched whole (Ozon "2 151 ₽")', () => {
+  const o = { rates: RATES, targetCurrency: 'SEK', locale: 'en-US' };
+  // 2151 RUB -> 2151/100*10 = 215.10 SEK, and no orphaned leading "2"
+  assert.equal(C.translateText('2 151 ₽', o), 'SEK 215.10');
+  assert.equal(C.translateText('2 151 ₽', o), 'SEK 215.10');
+  assert.equal(C.translateText('3 817 ₽', o), 'SEK 381.70');
+});
+
+test('translateText: ISO code with an attached symbol resolves to the code ("CAD $2,549.99")', () => {
+  const o = { rates: RATES, targetCurrency: 'EUR', locale: 'en-US' };
+  // 2549.99 CAD -> /1.25*0.5 = 1019.996 -> €1,020.00
+  assert.equal(C.translateText('CAD $2,549.99', o), '€1,020.00');
+});
+
+test('translateText: a 3-letter word before $NNN is not swallowed (regression)', () => {
+  const o = { rates: RATES, targetCurrency: 'EUR', locale: 'en-US' };
+  assert.equal(C.translateText('Buy THE $100 today', o), 'Buy THE €50.00 today');
+});
+
+test('resolveCurrency: code+symbol tokens', () => {
+  assert.equal(C.resolveCurrency('CAD $', {}), 'CAD');
+  assert.equal(C.resolveCurrency('USD $', {}), 'USD');
+  assert.equal(C.resolveCurrency('THE $', {}), null);
+});
+
 test('parseAmount: extracts first currency amount (prefix and suffix, EU format)', () => {
   assert.deepEqual(C.parseAmount('149,99 €', {}), { code: 'EUR', amount: 149.99 });
   assert.deepEqual(C.parseAmount('€149.99', {}), { code: 'EUR', amount: 149.99 });
   assert.deepEqual(C.parseAmount('now only $1,299.00!', {}), { code: 'USD', amount: 1299 });
+  assert.deepEqual(C.parseAmount('2 151 ₽', {}), { code: 'RUB', amount: 2151 });
+  assert.deepEqual(C.parseAmount('CAD $2,549.99', {}), { code: 'CAD', amount: 2549.99 });
   assert.equal(C.parseAmount('no price here', {}), null);
   assert.equal(C.parseAmount('', {}), null);
 });
