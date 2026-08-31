@@ -34,6 +34,19 @@ npm run icons
 Then in Chrome: `chrome://extensions` → enable **Developer mode** → **Load
 unpacked** → select this folder.
 
+## Known limitations
+
+- **Ambiguous `$`.** More than 20 currencies use the `$` sign. When a page shows
+  `$` with no ISO code and no other clue, the extension assumes **US dollars**.
+  It does use the site's country domain (`.ca`, `.au`, …) and language as hints,
+  but a `.com` page that quietly prices in Canadian or Australian dollars will
+  convert wrong. Prices that name the currency (`CAD $`, `A$`, `AUD 12.00`)
+  convert correctly. The same applies to a bare `kr` (assumed SEK) and a bare
+  `¥` (assumed JPY).
+- **Split-price widgets** where the symbol, whole number and cents are separate
+  page elements need per-site support. Amazon's `.a-price` is handled; other
+  retailers' custom markup has to be added one at a time.
+
 ## Develop
 
 ```bash

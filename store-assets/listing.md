@@ -34,6 +34,14 @@ Private by design
 - Rates are cached locally for six hours, with a European Central Bank fallback
   source.
 
+Good to know
+- More than 20 currencies use the "$" sign. When a page shows "$" with no
+  country code, the extension assumes US dollars (it uses the site's domain and
+  language as hints). Prices labelled "CAD $", "A$", "AUD 12.00" etc. convert
+  correctly. Same idea for a bare "kr" (assumed SEK) and "¥" (assumed JPY).
+- Exchange rates update about once a day and are cached for six hours. This is
+  for everyday reference, not trading.
+
 Open source (MIT), zero third-party dependencies. Full code, privacy policy and
 issue tracker on GitHub:
 https://github.com/horotat/live-currency-translator

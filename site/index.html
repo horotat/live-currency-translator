@@ -168,6 +168,29 @@
     </div>
   </section>
 
+  <section id="limitations">
+    <h2>Known limitations</h2>
+    <p class="note">
+      <strong>The “$” sign is ambiguous.</strong> More than twenty currencies use
+      it. When a page shows <code>$</code> with no ISO code and no other clue, the
+      extension assumes <strong>US dollars</strong>. It uses the site's country
+      domain (<code>.ca</code>, <code>.au</code>, …) and language as hints, but a
+      <code>.com</code> page that quietly prices in Canadian or Australian dollars
+      will convert wrong. Prices that name the currency — <code>CAD&nbsp;$</code>,
+      <code>A$</code>, <code>AUD&nbsp;12.00</code> — convert correctly. The same
+      applies to a bare <code>kr</code> (assumed SEK) and a bare <code>¥</code>
+      (assumed JPY). Trying to guess further tends to be wrong in confusing ways
+      more often than it helps, so this is left as a deliberate caveat.
+    </p>
+    <p class="note">
+      <strong>Split-price widgets.</strong> Some shops render the symbol, the
+      whole number and the cents as separate elements. Amazon's layout is
+      handled; other retailers with their own custom markup are added one at a
+      time — <a href="https://github.com/horotat/live-currency-translator/issues/new/choose">report a page</a>
+      and it can be looked at.
+    </p>
+  </section>
+
   <section>
     <h2>Privacy</h2>
     <p class="note">

@@ -27,12 +27,20 @@ not a public issue.
 5. **The quick checks** from the template: you ran it on that exact page, the
    popup showed no error, and `chrome://extensions → Errors` is empty.
 
-### Known limitation
+### Known limitations
 
-Split-price widgets (currency symbol, whole number and cents in separate page
-elements) need per-pattern support. Amazon's `.a-price` is handled. Other
-retailers with their own split markup have to be added one at a time — a good
-report with the URL and the surrounding HTML is what makes that possible.
+- **Ambiguous `$` / `kr` / `¥`.** A bare `$` with no ISO code is assumed to be
+  USD (likewise `kr` → SEK, `¥` → JPY). The site's country domain and language
+  are used as hints, but a `.com` page pricing in CAD/AUD without saying so will
+  convert wrong. This is a deliberate caveat — reliable disambiguation would need
+  page-context guessing that is wrong in confusing ways more often than it helps.
+  A safe future improvement: read `priceCurrency` from JSON-LD / microdata when a
+  page provides it. Reports of a specific page misreading `$` should say what the
+  correct currency is and whether the page exposes structured data.
+- **Split-price widgets** (currency symbol, whole number and cents in separate
+  page elements) need per-pattern support. Amazon's `.a-price` is handled. Other
+  retailers' custom markup has to be added one at a time — a good report with the
+  URL and the surrounding HTML is what makes that possible.
 
 ## Working on the code
 
