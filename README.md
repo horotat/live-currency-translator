@@ -51,17 +51,6 @@ is dependency-free vanilla JS with no build step. The only dev dependency
   permission outside `{activeTab, scripting, storage}`, adds `host_permissions`,
   a static `content_scripts` block, or a custom CSP.
 
-## Releasing
-
-See [PUBLISHING.md](PUBLISHING.md). Once the one-time setup is done, a release is:
-
-```bash
-npm version patch && git push --follow-tags
-```
-
-GitHub Actions builds the zip, creates a GitHub Release, and (once the Chrome
-Web Store secrets are set) uploads and submits the new version automatically.
-
 ## Credits
 
 Exchange rates by [open.er-api.com](https://www.exchangerate-api.com); fallback
