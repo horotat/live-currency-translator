@@ -1,19 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Live Currency Translator",
-  "version": "1.0",
-  "description": "Translates all currencies on a webpage to your preferred currency using real-time rates.",
-  "permissions": [
-    "storage"
-  ],
+  "version": "0.0.0",
+  "description": "Convert prices on any page to your preferred currency using live exchange rates.",
+  "permissions": ["activeTab", "scripting", "storage"],
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "Translate Currencies"
+    "default_popup": "src/popup.html",
+    "default_title": "Translate currencies on this page"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ]
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
 }
