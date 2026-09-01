@@ -5,3 +5,6 @@ dist/
 
 # private publishing notes
 PUBLISHING.md
+
+# internal planning docs (kept locally, not part of the OSS repo)
+docs/

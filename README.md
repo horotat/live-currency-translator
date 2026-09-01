@@ -1,10 +1,20 @@
 # Live Currency Translator
 
-A Chrome extension (Manifest V3) that converts the prices shown on any web page
-into your preferred currency, using live exchange rates.
+[![CI](https://github.com/horotat/live-currency-translator/actions/workflows/ci.yml/badge.svg)](https://github.com/horotat/live-currency-translator/actions/workflows/ci.yml)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/live-currency-translator/bddnijmjhfgmbkknmgaeeceghfemkkcd)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![runtime dependencies: 0](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 
-**Website & currency calculator:** https://currency.alireza.mk/
-· **Report an issue:** https://github.com/horotat/live-currency-translator/issues/new/choose
+A Chrome extension (Manifest V3) that converts the prices shown on any web page
+into your preferred currency, using live exchange rates. Click the toolbar icon,
+pick a currency, and every price on the page is rewritten in place — with a
+one-click revert.
+
+- **Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/live-currency-translator/bddnijmjhfgmbkknmgaeeceghfemkkcd)
+- **Website & live calculator:** https://currency.alireza.mk/
+- **Report a page that doesn't convert:** [new issue](https://github.com/horotat/live-currency-translator/issues/new/choose)
+
+![Converting a product page's prices to another currency](store-assets/screenshot-1.png)
 
 ## How it works
 
@@ -22,7 +32,11 @@ storage. The only network request is an unauthenticated
 `https://api.frankfurter.dev`). No account, no API key, no tracking — see
 [PRIVACY.md](PRIVACY.md).
 
-## Install from source
+## Install
+
+Most people should use the [Chrome Web Store listing](https://chromewebstore.google.com/detail/live-currency-translator/bddnijmjhfgmbkknmgaeeceghfemkkcd).
+
+To run from source:
 
 ```bash
 git clone https://github.com/horotat/live-currency-translator.git
@@ -67,11 +81,17 @@ is dependency-free vanilla JS with no build step. The only dev dependency
   permission outside `{activeTab, scripting, storage}`, adds `host_permissions`,
   a static `content_scripts` block, or a custom CSP.
 
+## Releases
+
+Tagging `vX.Y.Z` builds the zip, publishes a GitHub Release, and (once the
+Chrome Web Store API secrets are configured) uploads the new version to the
+store for review. See [`.github/workflows/release.yml`](.github/workflows/release.yml).
+
 ## Contributing
 
 Bug reports (especially "site X doesn't convert"), fixes, and ideas are welcome
 — see [CONTRIBUTING.md](CONTRIBUTING.md) for what makes a report actionable and
-how the code is structured.
+how the code is structured. Security issues: [SECURITY.md](SECURITY.md).
 
 ## Credits
 
