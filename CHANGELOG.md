@@ -4,7 +4,7 @@ All notable changes are recorded here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [SemVer](https://semver.org/).
 
-## [Unreleased]
+## [1.0.1] — 2026-09-10
 
 ### Added
 - Currency abbreviations: `Ft` (HUF), `TL` (TRY), `NT$` (TWD), `SFr` (CHF),
@@ -45,4 +45,5 @@ First public release on the Chrome Web Store.
 - GitHub Actions: CI on every PR, tag-triggered release + Chrome Web Store
   publish.
 
+[1.0.1]: https://github.com/horotat/live-currency-translator/releases/tag/v1.0.1
 [1.0.0]: https://github.com/horotat/live-currency-translator/releases/tag/v1.0.0
