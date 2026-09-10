@@ -1,6 +1,6 @@
 {
   "name": "live-currency-translator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Convert prices on any page to your preferred currency using live exchange rates.",
   "license": "MIT",
