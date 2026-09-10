@@ -2,7 +2,10 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 const C = require('../src/lib/currency.js');
 
-const RATES = { USD: 1, EUR: 0.5, JPY: 100, GBP: 0.8, SEK: 10, NOK: 11, CNY: 7, RUB: 100, CAD: 1.25 };
+const RATES = {
+  USD: 1, EUR: 0.5, JPY: 100, GBP: 0.8, SEK: 10, NOK: 11, CNY: 7,
+  RUB: 100, CAD: 1.25, HUF: 350, BGN: 1.8, TWD: 32, INR: 84, RON: 4.6,
+};
 
 test('isValidCurrencyCode', () => {
   assert.equal(C.isValidCurrencyCode('USD'), true);
@@ -87,6 +90,31 @@ test('resolveCurrency: code+symbol tokens', () => {
   assert.equal(C.resolveCurrency('CAD $', {}), 'CAD');
   assert.equal(C.resolveCurrency('USD $', {}), 'USD');
   assert.equal(C.resolveCurrency('THE $', {}), null);
+});
+
+test('translateText: Hungarian forint "Ft" suffix (Ryanair)', () => {
+  const o = { rates: RATES, targetCurrency: 'USD', locale: 'en-US' };
+  assert.equal(C.translateText('5,584 Ft', o), '$15.95');            // 5584 / 350
+  assert.equal(C.translateText('Total: 24,847 Ft today', o), 'Total: $70.99 today');
+  // space-grouped + Ft together (narrow no-break space)
+  assert.equal(C.translateText('from 12 999 Ft', o), 'from $37.14');
+});
+
+test('resolveCurrency: newly added abbreviations', () => {
+  assert.equal(C.resolveCurrency('Ft', {}), 'HUF');
+  assert.equal(C.resolveCurrency('лв', {}), 'BGN');
+  assert.equal(C.resolveCurrency('NT$', {}), 'TWD');
+  assert.equal(C.resolveCurrency('lei', {}), 'RON');
+  assert.equal(C.resolveCurrency('lei', { host: 'shop.example.md' }), 'MDL');
+  assert.equal(C.resolveCurrency('Rs', {}), 'INR');
+  assert.equal(C.resolveCurrency('Rs', { host: 'store.example.pk' }), 'PKR');
+});
+
+test('translateText: letter tokens do not match inside words', () => {
+  const o = { rates: RATES, targetCurrency: 'USD', locale: 'en-US' };
+  assert.equal(C.translateText('Mrs. 500 guests arrived', o), 'Mrs. 500 guests arrived');
+  assert.equal(C.translateText('paid 100 kroner in cash', o), 'paid 100 kroner in cash');
+  assert.equal(C.translateText('a 5 ft tall door', o), 'a 5 ft tall door'); // lowercase ft != Ft
 });
 
 test('parseAmount: extracts first currency amount (prefix and suffix, EU format)', () => {

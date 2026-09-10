@@ -12,11 +12,20 @@ function escapeRegExp(str) {
 
 /** Unambiguous symbol -> ISO 4217 code. */
 const SYMBOL_TO_CODE = {
+  // dedicated Unicode currency signs
   '€': 'EUR', '£': 'GBP', '₩': 'KRW', '₹': 'INR', '₽': 'RUB', '₺': 'TRY',
-  '₪': 'ILS', '฿': 'THB', '₴': 'UAH', '₱': 'PHP', '₫': 'VND',
+  '₪': 'ILS', '฿': 'THB', '₴': 'UAH', '₱': 'PHP', '₫': 'VND', '₾': 'GEL',
+  '₸': 'KZT', '₼': 'AZN', '₮': 'MNT', '₦': 'NGN', '₵': 'GHS', '₡': 'CRC',
+  '₲': 'PYG', '៛': 'KHR', '₭': 'LAK', '৳': 'BDT',
+  // dollar variants
   'US$': 'USD', 'A$': 'AUD', 'AU$': 'AUD', 'C$': 'CAD', 'CA$': 'CAD',
-  'NZ$': 'NZD', 'HK$': 'HKD', 'S$': 'SGD', 'R$': 'BRL', 'MX$': 'MXN',
-  'CHF': 'CHF', 'Kč': 'CZK', 'zł': 'PLN', 'RM': 'MYR', 'Rp': 'IDR',
+  'NZ$': 'NZD', 'HK$': 'HKD', 'S$': 'SGD', 'R$': 'BRL', 'MX$': 'MXN', 'NT$': 'TWD',
+  // Latin-letter abbreviations (matched case-sensitively)
+  'CHF': 'CHF', 'SFr': 'CHF', 'SFr.': 'CHF',
+  'Kč': 'CZK', 'zł': 'PLN', 'Ft': 'HUF', 'RM': 'MYR', 'Rp': 'IDR', 'TL': 'TRY',
+  // Cyrillic abbreviations
+  'лв': 'BGN', 'лв.': 'BGN', 'грн': 'UAH', 'грн.': 'UAH',
+  'дин': 'RSD', 'дин.': 'RSD', 'ден': 'MKD',
 };
 
 /** Ambiguous symbol -> resolution rules. `byHost` keys are TLD/host suffixes. */
@@ -36,6 +45,10 @@ const AMBIGUOUS = {
     byHost: { '.no': 'NOK', '.dk': 'DKK', '.is': 'ISK', '.se': 'SEK' },
     byLang: { 'nb': 'NOK', 'nn': 'NOK', 'no': 'NOK', 'da': 'DKK', 'is': 'ISK', 'sv': 'SEK' },
   },
+  'Rs': { default: 'INR', byHost: { '.pk': 'PKR', '.lk': 'LKR', '.np': 'NPR' }, byLang: {} },
+  'Rs.': { default: 'INR', byHost: { '.pk': 'PKR', '.lk': 'LKR', '.np': 'NPR' }, byLang: {} },
+  '₨': { default: 'PKR', byHost: { '.in': 'INR', '.lk': 'LKR', '.np': 'NPR' }, byLang: {} },
+  'lei': { default: 'RON', byHost: { '.md': 'MDL' }, byLang: {} },
 };
 
 /** Symbols we scan for, longest first so `US$` wins over `$`. */
@@ -115,10 +128,10 @@ function resolveCurrency(token, ctx) {
 
   const amb = AMBIGUOUS[token];
   if (amb) {
-    for (const suffix of Object.keys(amb.byHost)) {
+    for (const suffix of Object.keys(amb.byHost || {})) {
       if (host.endsWith(suffix)) return amb.byHost[suffix];
     }
-    for (const prefix of Object.keys(amb.byLang)) {
+    for (const prefix of Object.keys(amb.byLang || {})) {
       if (lang === prefix || lang.startsWith(prefix + '-')) return amb.byLang[prefix];
     }
     return amb.default;
@@ -154,11 +167,13 @@ const SYM = '(?:' + SYMBOLS.map(escapeRegExp).join('|') + '|[A-Z]{3})';
 // A prefix token may also be a *real* ISO code with a symbol stuck on: "CAD $".
 // Restricting to real codes keeps "THE $100" from being swallowed as one token.
 const PRE = '(?:(?:' + [...CURRENCY_CODES].join('|') + ')\\s?[$€£¥₩₹₽₺]|' + SYM + ')';
-const RE_PREFIX = new RegExp('(' + PRE + ')\\s?' + NUM, 'g');
-const RE_SUFFIX = new RegExp(NUM + '\\s?(' + SYM + ')', 'g');
+// `(?<![A-Za-z])` / `(?![A-Za-z])` stop a letter-based token (Ft, TL, Rs, kr,
+// lei, USD) from matching inside a longer word ("Mrs. 500", "100 kroner", "TLC").
+const RE_PREFIX = new RegExp('(?<![A-Za-z])(' + PRE + ')\\s?' + NUM, 'g');
+const RE_SUFFIX = new RegExp(NUM + '\\s?(' + SYM + ')(?![A-Za-z])', 'g');
 // Non-global copies for single-match extraction (global regexes are stateful).
-const RE_PREFIX_ONE = new RegExp('(' + PRE + ')\\s?' + NUM);
-const RE_SUFFIX_ONE = new RegExp(NUM + '\\s?(' + SYM + ')');
+const RE_PREFIX_ONE = new RegExp('(?<![A-Za-z])(' + PRE + ')\\s?' + NUM);
+const RE_SUFFIX_ONE = new RegExp(NUM + '\\s?(' + SYM + ')(?![A-Za-z])');
 
 /**
  * Find the first currency amount in a string.

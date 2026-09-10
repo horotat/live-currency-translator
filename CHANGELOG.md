@@ -4,6 +4,18 @@ All notable changes are recorded here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Currency abbreviations: `Ft` (HUF), `TL` (TRY), `NT$` (TWD), `SFr` (CHF),
+  `лв` (BGN), `грн` (UAH), `дин` (RSD), `ден` (MKD), and the signs `₾ ₸ ₼ ₮ ₦
+  ₵ ₡ ₲ ៛ ₭ ৳`. `Rs`/`₨` (default INR) and `lei` (default RON) resolve by
+  country domain.
+
+### Fixed
+- Letter-based tokens (`Ft`, `TL`, `Rs`, `kr`, `lei`, ISO codes) no longer match
+  inside a longer word — `Mrs. 500`, `100 kroner`, `TLC` are left alone.
+
 ## [1.0.0] — 2026-09-01
 
 First public release on the Chrome Web Store.

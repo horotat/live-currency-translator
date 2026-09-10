@@ -50,13 +50,17 @@ unpacked** → select this folder.
 
 ## Known limitations
 
-- **Ambiguous `$`.** More than 20 currencies use the `$` sign. When a page shows
-  `$` with no ISO code and no other clue, the extension assumes **US dollars**.
-  It does use the site's country domain (`.ca`, `.au`, …) and language as hints,
-  but a `.com` page that quietly prices in Canadian or Australian dollars will
-  convert wrong. Prices that name the currency (`CAD $`, `A$`, `AUD 12.00`)
-  convert correctly. The same applies to a bare `kr` (assumed SEK) and a bare
-  `¥` (assumed JPY).
+- **Ambiguous symbols.** Several signs are shared by multiple currencies. Where a
+  page gives no ISO code and no other clue, the extension picks a default and
+  uses the site's country domain (`.ca`, `.au`, …) and language as hints: `$` →
+  USD, `kr` → SEK, `¥` → JPY, `Rs` → INR, `lei` → RON. A `.com` page that quietly
+  prices in, say, Canadian dollars will convert wrong; prices that name the
+  currency (`CAD $`, `A$`, `AUD 12.00`) convert correctly.
+- **Symbol coverage.** Common symbols and abbreviations are recognised (`Ft`,
+  `zł`, `Kč`, `лв`, `NT$`, `₺`, `₾`, …), but the set is finite. A currency shown
+  only as an unusual local abbreviation may not be picked up — please
+  [open an issue](https://github.com/horotat/live-currency-translator/issues/new/choose)
+  with the site and how the price is written.
 - **Split-price widgets** where the symbol, whole number and cents are separate
   page elements need per-site support. Amazon's `.a-price` is handled; other
   retailers' custom markup has to be added one at a time.
