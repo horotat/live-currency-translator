@@ -17,6 +17,6 @@
     "build": "node scripts/sync-version.mjs && node scripts/make-icons.mjs"
   },
   "devDependencies": {
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.5"
   }
 }
